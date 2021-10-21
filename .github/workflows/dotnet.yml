@@ -64,7 +64,7 @@ jobs:
        with:
          creds: ${{ secrets.AZURE_CREDENTIALS}}
      - name: Azure WebApp
-       uses: Azure/webapp-deploy@v2
+       uses: Azure/webapps-deploy@v2
        with:
          app-name: GitHubWorkShop153583028
          slot-name: staging 
