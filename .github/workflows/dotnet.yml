@@ -46,3 +46,26 @@ jobs:
      - run: |
          docker build -f src/Web/Dockerfile . -t ${{ secrets.ACR_SERVER }}/eshop:${{ github.run_id }}
          docker push ${{ secrets.ACR_SERVER }}/eshop:${{ github.run_id }}
+         
+  deployStaging:
+     runs-on: ubuntu-latest
+     needs: buildPushAppImage
+     environment: staging
+     steps:
+     - name: Azure Container Registry Login
+       uses: Azure/docker-login@v1
+       with:
+         creds: ${{ secrets.ACR_USER}}
+         password: ${{ secrets.ACR_PWD}} 
+         login-server: ${{ secrets.ACR_SERVER}}
+         
+     - name: Azure Login
+       uses: Azure/ogin@v1 
+       with:
+         creds: ${{ secrets.AZURE_CREDENTIALS}}
+     - name: Azure WebApp
+       uses: Azure/webapp-deploy@v2
+       with:
+         app-name: GitHubWorkShop153583028
+         slot-name: staging 
+         images: ${{ secrets.ACR_SERVER}}/eshop:${{ github.run_id}}
